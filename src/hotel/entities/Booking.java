@@ -10,28 +10,28 @@ import hotel.credit.CreditCard;
 import hotel.utils.IOUtils;
 
 public class Booking {
-	
+
 	private enum State {PENDING, CHECKED_IN, CHECKED_OUT};
-	
+
 	private Guest guest;
 	private Room room;
-	private Date bookedArrival; 
+	private Date bookedArrival;
 	private int stayLength;
 	int numberOfOccupants;
 	long confirmationNumber;
 	CreditCard creditCard;
-	
+
 	private List<ServiceCharge> charges;
-	
+
 	private State state;
 
 
-	
-	public Booking(Guest guest, Room room, 
-			Date arrivalDate, int stayLength, 
-			int numberOfOccupants, 
+
+	public Booking(Guest guest, Room room,
+			Date arrivalDate, int stayLength,
+			int numberOfOccupants,
 			CreditCard creditCard) {
-		
+
 		this.guest = guest;
 		this.room = room;
 		this.bookedArrival = arrivalDate;
@@ -43,17 +43,17 @@ public class Booking {
 		this.state = State.PENDING;
 	}
 
-	
+
 	private long generateConfirmationNumber(int roomId, Date arrivalDate) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(arrivalDate);
-		
+
 		int year = calendar.get(Calendar.YEAR);
 		int month = calendar.get(Calendar.MONTH);
 		int day = calendar.get(Calendar.DAY_OF_MONTH);
-		
+
 		String numberString = String.format("%d%d%d%d", day, month, year, roomId);
-		
+
 		return Long.parseLong(numberString);
 	}
 
@@ -65,12 +65,12 @@ public class Booking {
 		calendar.setTime(bookedArrival);
 		calendar.add(Calendar.DATE, stayLength);
 		Date bookedDeparture = calendar.getTime();
-		
+
 		calendar.setTime(requestedArrival);
 		calendar.add(Calendar.DATE, stayLength);
 		Date requestedDeparture = calendar.getTime();
-		
-		boolean doesConflict = requestedArrival.before(bookedDeparture) && 
+
+		boolean doesConflict = requestedArrival.before(bookedDeparture) &&
 				requestedDeparture.after(bookedArrival);
 
 		return doesConflict;
@@ -85,8 +85,8 @@ public class Booking {
 	public int getRoomId() {
 		return room.getId();
 	}
-	
-	
+
+
 	public Room getRoom() {
 		return room;
 	}
@@ -133,7 +133,15 @@ public class Booking {
 
 
 	public void checkIn() {
-		// TODO Auto-generated method stub
+		if (state != State.PENDING) {
+			String mesg = String.format("Booking: checkIn : bad state : %s", state);
+			throw new RuntimeException(mesg);
+		}
+
+		//Sets room to Occupied
+		room.checkin();
+
+		state = State.CHECKED_IN;
 	}
 
 
