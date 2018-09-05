@@ -152,7 +152,15 @@ public class Booking {
 
 
 	public void checkOut() {
-		// TODO Auto-generated method stub
+		if (state != State.CHECKED_IN) {
+			String mesg = String.format("Booking: checkIn : bad state : %s", state);
+			throw new RuntimeException(mesg);
+		}
+
+		//Sets room to READY
+		room.checkout(this);
+
+		state = State.CHECKED_OUT;
 	}
 
 }
