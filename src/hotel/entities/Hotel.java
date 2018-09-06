@@ -99,7 +99,13 @@ public class Hotel {
 
 
 	public void checkin(long confirmationNumber) {
-		//TODO Auto-generated method stub
+		Booking booking = findBookingByConfirmationNumber(confirmationNumber);
+		if (booking == null) {
+			String mesg = String.format("Hotel: checkin : no booking found for confirmation number");
+			throw new RuntimeException(mesg);
+		}
+		booking.checkIn();
+		activeBookingsByRoomId.put(booking.getRoomId(), booking);
 	}
 
 
