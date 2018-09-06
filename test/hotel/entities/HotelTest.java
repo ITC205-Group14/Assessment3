@@ -2,7 +2,6 @@ package hotel.entities;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -31,8 +30,6 @@ class HotelTest
 	{
 		//Arrange
 		Date arrivalDate = new GregorianCalendar(2018, 0, 1).getTime();
-		SimpleDateFormat sdf = new SimpleDateFormat("ddMMYYYY");
-		System.out.println(sdf.format(arrivalDate));
 		int stayLength = 3;
 		int occupantNumber = 1;
 		long expected = 1012018123;
