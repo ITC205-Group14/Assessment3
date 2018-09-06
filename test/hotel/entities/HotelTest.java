@@ -25,8 +25,11 @@ class HotelTest
 	@Mock Guest guest;
 	@Mock CreditCard creditCard;
 
+	/**
+	 * Tests the booking number confirmation format
+	 */
 	@Test
-	void bookConfirmationNumberFormat()
+	void bookConfirmationNumberFormatLeadingZero()
 	{
 		//Arrange
 		Date arrivalDate = new GregorianCalendar(2018, 0, 1).getTime();
