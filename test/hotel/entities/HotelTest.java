@@ -27,6 +27,7 @@ class HotelTest
 
 	/**
 	 * Tests the booking number confirmation format
+	 * with a leading zero is formatted correctly
 	 */
 	@Test
 	void bookConfirmationNumberFormatLeadingZero()
