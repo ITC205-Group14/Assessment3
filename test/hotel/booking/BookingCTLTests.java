@@ -1,15 +1,17 @@
-package hotel.tests;
+package hotel.booking;
 
 import java.util.Date;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import hotel.booking.BookingCTL;
 import hotel.credit.CreditCardType;
 import hotel.entities.Hotel;
 import hotel.entities.RoomType;
 
+@ExtendWith(MockitoExtension.class)
 class BookingCTLTests
 {
 	Hotel hotel;
