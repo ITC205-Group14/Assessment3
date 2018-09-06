@@ -110,7 +110,12 @@ public class Hotel {
 
 
 	public void addServiceCharge(int roomId, ServiceType serviceType, double cost) {
-		// TODO Auto-generated method stub
+		Booking booking = findActiveBookingByRoomId(roomId);
+		if (booking == null) {
+			String mesg = String.format("Hotel: addServiceCharge : no booking found for room id");
+			throw new RuntimeException(mesg);
+		}
+		booking.addServiceCharge(serviceType, cost);
 	}
 
 
