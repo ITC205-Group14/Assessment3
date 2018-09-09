@@ -14,7 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import hotel.credit.CreditCard;
 
 @ExtendWith(MockitoExtension.class)
-class HotelTest
+class HotelBookTests
 {
 	Hotel hotel = new Hotel();
 
