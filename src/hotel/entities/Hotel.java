@@ -1,5 +1,6 @@
 package hotel.entities;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,13 +9,13 @@ import hotel.credit.CreditCard;
 import hotel.utils.IOUtils;
 
 public class Hotel {
-	
+
 	private Map<Integer, Guest> guests;
 	public Map<RoomType, Map<Integer,Room>> roomsByType;
 	public Map<Long, Booking> bookingsByConfirmationNumber;
 	public Map<Integer, Booking> activeBookingsByRoomId;
-	
-	
+
+
 	public Hotel() {
 		guests = new HashMap<>();
 		roomsByType = new HashMap<>();
@@ -26,7 +27,7 @@ public class Hotel {
 		activeBookingsByRoomId = new HashMap<>();
 	}
 
-	
+
 	public void addRoom(RoomType roomType, int id) {
 		IOUtils.trace("Hotel: addRoom");
 		for (Map<Integer, Room> rooms : roomsByType.values()) {
@@ -39,30 +40,30 @@ public class Hotel {
 		rooms.put(id, room);
 	}
 
-	
+
 	public boolean isRegistered(int phoneNumber) {
 		return guests.containsKey(phoneNumber);
 	}
 
-	
+
 	public Guest registerGuest(String name, String address, int phoneNumber) {
 		if (guests.containsKey(phoneNumber)) {
 			throw new RuntimeException("Phone number already registered");
 		}
 		Guest guest = new Guest(name, address, phoneNumber);
-		guests.put(phoneNumber, guest);		
+		guests.put(phoneNumber, guest);
 		return guest;
 	}
 
-	
+
 	public Guest findGuestByPhoneNumber(int phoneNumber) {
 		Guest guest = guests.get(phoneNumber);
 		return guest;
 	}
 
-	
+
 	public Booking findActiveBookingByRoomId(int roomId) {
-		Booking booking = activeBookingsByRoomId.get(roomId);;
+		Booking booking = activeBookingsByRoomId.get(roomId);
 		return booking;
 	}
 
@@ -74,37 +75,57 @@ public class Hotel {
 			IOUtils.trace(String.format("Hotel: checking room: %d",room.getId()));
 			if (room.isAvailable(arrivalDate, stayLength)) {
 				return room;
-			}			
+			}
 		}
 		return null;
 	}
 
-	
+
 	public Booking findBookingByConfirmationNumber(long confirmationNumber) {
 		return bookingsByConfirmationNumber.get(confirmationNumber);
 	}
 
-	
-	public long book(Room room, Guest guest, 
+
+	public long book(Room room, Guest guest,
 			Date arrivalDate, int stayLength, int occupantNumber,
 			CreditCard creditCard) {
-		// TODO Auto-generated method stub
-		return 0L;		
+		SimpleDateFormat sdf = new SimpleDateFormat("ddMMYYYY");
+		long confirmationNumber = Long.parseLong(sdf.format(arrivalDate) + room.id);
+		room.book(guest, arrivalDate, stayLength, occupantNumber, creditCard);
+		Booking booking = new Booking(guest, room, arrivalDate, stayLength, occupantNumber, creditCard);
+		bookingsByConfirmationNumber.put(confirmationNumber, booking);
+		return confirmationNumber;
 	}
 
-	
+
 	public void checkin(long confirmationNumber) {
-		// TODO Auto-generated method stub
+		Booking booking = findBookingByConfirmationNumber(confirmationNumber);
+		if (booking == null) {
+			String mesg = String.format("Hotel: checkin : no booking found for confirmation number");
+			throw new RuntimeException(mesg);
+		}
+		booking.checkIn();
+		activeBookingsByRoomId.put(booking.getRoomId(), booking);
 	}
 
 
 	public void addServiceCharge(int roomId, ServiceType serviceType, double cost) {
-		// TODO Auto-generated method stub
+		Booking booking = findActiveBookingByRoomId(roomId);
+		if (booking == null) {
+			String mesg = String.format("Hotel: addServiceCharge : no booking found for room id");
+			throw new RuntimeException(mesg);
+		}
+		booking.addServiceCharge(serviceType, cost);
 	}
 
-	
+
 	public void checkout(int roomId) {
-		// TODO Auto-generated method stub
+		Booking booking = findActiveBookingByRoomId(roomId);
+		if (booking == null) {
+			String mesg = String.format("Hotel: checkout : no booking found for room id");
+			throw new RuntimeException(mesg);
+		}
+		booking.checkOut();
 	}
 
 
