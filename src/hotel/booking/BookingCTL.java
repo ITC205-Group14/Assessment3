@@ -16,7 +16,7 @@ import hotel.utils.IOUtils;
 public class BookingCTL {
 
 
-	private static enum State {PHONE, ROOM, REGISTER, TIMES, CREDIT, APPROVED, CANCELLED, COMPLETED}
+	public static enum State {PHONE, ROOM, REGISTER, TIMES, CREDIT, APPROVED, CANCELLED, COMPLETED}
 
 	private BookingUI bookingUI;
 	private Hotel hotel;
@@ -157,6 +157,13 @@ public class BookingCTL {
 		}
 	}
 
+	public boolean isCompleted(){
+		return state == State.COMPLETED;
+	}
+
+	public void setState(State state){
+		this.state = state;
+	}
 
 	public void cancel() {
 		IOUtils.trace("BookingCTL: cancel");
