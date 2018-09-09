@@ -146,9 +146,7 @@ public class BookingCTL {
 		if(approved) {
 			long confirmationNumber = hotel.book(room, guest, arrivalDate, stayLength, occupantNumber, creditCard);
 			String roomDescription = room.getDescription();
-			//TODO: Can't get room number because hotel.book() isn't implemented
-			//TODO: Using dummy value instead
-			int roomNumber = 0;
+			int roomNumber = room.getId();
 			String guestName = guest.getName();
 			String creditCardVendor = creditCard.getVendor();
 			bookingUI.displayConfirmedBooking(roomDescription, roomNumber, arrivalDate, stayLength, guestName, creditCardVendor, number, cost, confirmationNumber);
