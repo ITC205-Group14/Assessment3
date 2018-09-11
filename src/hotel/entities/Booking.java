@@ -11,7 +11,7 @@ import hotel.utils.IOUtils;
 
 public class Booking {
 
-	private enum State {PENDING, CHECKED_IN, CHECKED_OUT};
+	public enum State {PENDING, CHECKED_IN, CHECKED_OUT};
 
 	private Guest guest;
 	private Room room;
@@ -161,6 +161,10 @@ public class Booking {
 		room.checkout(this);
 
 		state = State.CHECKED_OUT;
+	}
+
+	public void setState(State state) {
+		this.state = state;
 	}
 
 }
