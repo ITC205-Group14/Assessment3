@@ -16,7 +16,7 @@ import hotel.utils.IOUtils;
 public class BookingCTL {
 
 
-	private static enum State {PHONE, ROOM, REGISTER, TIMES, CREDIT, APPROVED, CANCELLED, COMPLETED}
+	public static enum State {PHONE, ROOM, REGISTER, TIMES, CREDIT, APPROVED, CANCELLED, COMPLETED}
 
 	private BookingUI bookingUI;
 	private Hotel hotel;
@@ -146,9 +146,7 @@ public class BookingCTL {
 		if(approved) {
 			long confirmationNumber = hotel.book(room, guest, arrivalDate, stayLength, occupantNumber, creditCard);
 			String roomDescription = room.getDescription();
-			//TODO: Can't get room number because hotel.book() isn't implemented
-			//TODO: Using dummy value instead
-			int roomNumber = 0;
+			int roomNumber = room.getId();
 			String guestName = guest.getName();
 			String creditCardVendor = creditCard.getVendor();
 			bookingUI.displayConfirmedBooking(roomDescription, roomNumber, arrivalDate, stayLength, guestName, creditCardVendor, number, cost, confirmationNumber);
@@ -159,6 +157,13 @@ public class BookingCTL {
 		}
 	}
 
+	public boolean isCompleted(){
+		return state == State.COMPLETED;
+	}
+
+	public void setState(State state){
+		this.state = state;
+	}
 
 	public void cancel() {
 		IOUtils.trace("BookingCTL: cancel");

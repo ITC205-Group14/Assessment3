@@ -11,49 +11,49 @@ import hotel.entities.ServiceType;
 import hotel.exceptions.NullInputException;
 
 public class IOUtils {
-	
+
 	private static Scanner stdin;
 	private static boolean traceSet = false;
-	
-	
+
+
 	public static void setTrace(boolean trace) {
 		traceSet = trace;
 	}
 
-	
+
 	public static void output(Object o) {
 		System.out.print(o);
 	}
 
-	
+
 	public static void outputln(Object o) {
 		System.out.println(o);
 	}
 
-	
+
 	public static void trace(Object o) {
 		if (traceSet) {
-			System.err.println(o);			
+			System.err.println(o);
 		}
 	}
 
-	
+
 	public static String input(String prompt) {
 		output(prompt);
 		return nextln();
-		
+
 	}
 
 
 	public static String nextln() {
 		if (stdin == null) {
-		    stdin = new Scanner(System.in);
+			stdin = new Scanner(System.in);
 		}
 		String ans = stdin.nextLine();
 		return ans.trim();
 	}
-	
-	
+
+
 	public static int getValidPositiveInt(String prompt) {
 		int number = 0;
 		while (number <= 0) {
@@ -72,16 +72,16 @@ public class IOUtils {
 				continue;
 			}
 		}
-		return number;		
+		return number;
 	}
-	
-	
-	public static Date getValidDate(String prompt) {		
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+
+	public static Date getValidDate(String prompt) {
+		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
 		Date date = null;
 
-		IOUtils.outputln(prompt);		
-		boolean invalid = true;		
+		IOUtils.outputln(prompt);
+		boolean invalid = true;
 		while (invalid) {
 			try {
 				String dayStr = IOUtils.input("Enter day (dd): ");
@@ -109,15 +109,15 @@ public class IOUtils {
 		}
 		return date;
 	}
-	
-	
+
+
 	public static RoomType getValidRoomType(String prompt) {
 		RoomType roomTypeSelection = null;
-		
+
 		boolean valid = false;
 		while (!valid) {
 			for (RoomType r : RoomType.values()) {
-				String line = String.format("%s:\t%s, %d", 
+				String line = String.format("%s:\t%s, %d",
 						r.getIdentifier(), r.getDescription(), r.getMaxOccupancy());
 				IOUtils.outputln(line);
 			}
@@ -133,17 +133,17 @@ public class IOUtils {
 				IOUtils.outputln("Invalid selection, please try again");
 			}
 		}
-		return roomTypeSelection;		
+		return roomTypeSelection;
 	}
 
 
 	public static CreditCardType getValidCreditType(String prompt) {
 		String cardSelector = null;
-		
+
 		boolean validType = false;
 		while (!validType) {
 			for (CreditCardType ct : CreditCardType.values()) {
-				String line = String.format("%s:\t%s", 
+				String line = String.format("%s:\t%s",
 						ct.getIdentifier(), ct.getVendor());
 				IOUtils.outputln(line);
 			}
@@ -157,17 +157,17 @@ public class IOUtils {
 			}
 		}
 		CreditCardType creditCardType = CreditCardType.getCardTypeByIdentifier(cardSelector);
-		return creditCardType;		
+		return creditCardType;
 	}
 
 
 	public static ServiceType getValidServiceType(String prompt) {
 		ServiceType serviceType = null;
-		
+
 		boolean valid = false;
 		while (!valid) {
 			for (ServiceType r : ServiceType.values()) {
-				String line = String.format("%s:\t%s", 
+				String line = String.format("%s:\t%s",
 						r.getIdentifier(), r.getDescription());
 				IOUtils.outputln(line);
 			}
@@ -183,13 +183,13 @@ public class IOUtils {
 				IOUtils.outputln("Invalid selection, please try again");
 			}
 		}
-		return serviceType;		
+		return serviceType;
 	}
 
 
 	public static boolean getBooleanYesNoAnswer(String prompt) {
 		String answer = null;
-		
+
 		boolean validAnswer = false;
 		while (!validAnswer) {
 			answer = IOUtils.input(prompt + "(Y/N) : ").toUpperCase().trim();
@@ -223,7 +223,7 @@ public class IOUtils {
 				continue;
 			}
 		}
-		return number;		
+		return number;
 	}
 
 
@@ -245,7 +245,7 @@ public class IOUtils {
 				continue;
 			}
 		}
-		return number;		
+		return number;
 	}
-	
+
 }
