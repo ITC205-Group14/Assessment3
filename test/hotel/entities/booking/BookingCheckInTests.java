@@ -1,5 +1,7 @@
 package hotel.entities.booking;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Date;
@@ -7,6 +9,7 @@ import java.util.Date;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.function.Executable;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -15,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import hotel.credit.CreditCard;
 import hotel.entities.Booking;
+import hotel.entities.Booking.State;
 import hotel.entities.Guest;
 import hotel.entities.Hotel;
 import hotel.entities.Room;
@@ -44,6 +48,7 @@ class BookingCheckInTests
 	void bookingCheckinWithValidState()
 	{
 		//Arrange
+		booking.setState(State.PENDING);
 		assertTrue(booking.isPending());
 
 		//Act
@@ -52,6 +57,20 @@ class BookingCheckInTests
 		//Assert
 		Mockito.verify(room).checkin();
 		assertTrue(booking.isCheckedIn());
+	}
+
+	@Test
+	void bookingCheckinWithInvalidState()
+	{
+		//Arrange
+		booking.setState(State.CHECKED_IN);
+		assertFalse(booking.isPending());
+
+		//Act
+		Executable e = () -> booking.checkIn();
+
+		//Assert
+		assertThrows(RuntimeException.class, e);
 	}
 
 }
