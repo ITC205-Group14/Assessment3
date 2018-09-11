@@ -1,4 +1,4 @@
-package hotel.entities;
+package hotel.entities.hotel;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -12,6 +12,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import hotel.credit.CreditCard;
+import hotel.entities.Guest;
+import hotel.entities.Hotel;
+import hotel.entities.Room;
+import hotel.entities.RoomType;
 
 @ExtendWith(MockitoExtension.class)
 class HotelBookTests
