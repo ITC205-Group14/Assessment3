@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import hotel.entities.Booking;
@@ -18,7 +17,7 @@ import hotel.entities.Hotel;
 @ExtendWith(MockitoExtension.class)
 class HotelCheckInTests
 {
-	@Spy Hotel hotel = new Hotel();
+	Hotel hotel = new Hotel();
 
 	@Mock Booking booking;
 
