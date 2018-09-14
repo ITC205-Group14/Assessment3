@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import hotel.entities.Booking;
@@ -15,7 +17,7 @@ import hotel.entities.Hotel;
 @ExtendWith(MockitoExtension.class)
 class HotelCheckOutTests
 {
-	Hotel hotel = new Hotel();
+	@Spy Hotel hotel = new Hotel();
 
 	@Mock Booking booking;
 
@@ -23,7 +25,8 @@ class HotelCheckOutTests
 	void hotelCheckoutWithInvalidRoomId()
 	{
 		//Arrange
-		int roomId = 99999;
+		int roomId = 0;
+		Mockito.when(hotel.findActiveBookingByRoomId(0)).thenReturn(null);
 
 		//Act
 		Executable test = () -> hotel.checkout(roomId);
