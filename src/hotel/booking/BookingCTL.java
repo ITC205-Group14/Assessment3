@@ -16,7 +16,7 @@ import hotel.utils.IOUtils;
 public class BookingCTL {
 
 
-	public static enum State {PHONE, ROOM, REGISTER, TIMES, CREDIT, APPROVED, CANCELLED, COMPLETED}
+	private static enum State {PHONE, ROOM, REGISTER, TIMES, CREDIT, APPROVED, CANCELLED, COMPLETED}
 
 	private BookingUI bookingUI;
 	private Hotel hotel;
@@ -155,14 +155,6 @@ public class BookingCTL {
 		} else {
 			bookingUI.displayMessage("Credit Card could not be authorized");
 		}
-	}
-
-	public boolean isCompleted(){
-		return state == State.COMPLETED;
-	}
-
-	public void setState(State state){
-		this.state = state;
 	}
 
 	public void cancel() {
