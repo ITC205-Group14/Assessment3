@@ -70,4 +70,54 @@ class HotelAddServiceChargeTests
 		verify(booking).addServiceCharge(ServiceType.BAR_FRIDGE, 30);
 	}
 
+	@Test
+	void hotelAddServiceChargeWithMaxCost()
+	{
+		//Arrange
+		int roomId = 0;
+		hotel.activeBookingsByRoomId.put(0, booking);
+		double cost = Double.MAX_VALUE;
+
+		//Act
+		hotel.addServiceCharge(roomId, ServiceType.BAR_FRIDGE, cost);
+
+		//Assert
+		verify(booking).addServiceCharge(ServiceType.BAR_FRIDGE, cost);
+	}
+
+	@Test
+	void hotelAddServiceChargeWithMinDoubleCost()
+	{
+		//Arrange
+		int roomId = 0;
+		hotel.activeBookingsByRoomId.put(0, booking);
+		double cost = Double.MIN_VALUE;
+
+		//Act
+		hotel.addServiceCharge(roomId, ServiceType.BAR_FRIDGE, cost);
+
+		//Assert
+		verify(booking).addServiceCharge(ServiceType.BAR_FRIDGE, cost);
+	}
+
+	@Test
+	void hotelAddServiceInvalidServiceType()
+	{
+		//Arrange
+		int roomId = 0;
+		hotel.activeBookingsByRoomId.put(0, booking);
+		double cost = 20;
+
+		//Just use a null
+		ServiceType FREAKISHLY_SMALL_WINE = null;
+
+		//Act
+		hotel.addServiceCharge(roomId, FREAKISHLY_SMALL_WINE, cost);
+
+		//Assert
+		verify(booking).addServiceCharge(FREAKISHLY_SMALL_WINE, cost);
+	}
+
+
+
 }
