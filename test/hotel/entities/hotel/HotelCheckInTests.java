@@ -51,4 +51,96 @@ class HotelCheckInTests
 		assertEquals(hotel.activeBookingsByRoomId.size(), 1);
 	}
 
+	//Boundary tests
+
+	@Test
+	void hotelCheckinWithNegativeConfirmationNumber()
+	{
+		//Arrange
+		long confirmationNumber = -1L;
+		hotel.bookingsByConfirmationNumber.put(confirmationNumber, booking);
+		assertTrue(hotel.activeBookingsByRoomId.size() == 0);
+
+		//Act
+		hotel.checkin(confirmationNumber);
+
+		//Assert
+		verify(booking).checkIn();
+		assertEquals(hotel.activeBookingsByRoomId.size(), 1);
+	}
+
+	@Test
+	void hotelCheckinWithMaxLongConfirmationNumber()
+	{
+		//Arrange
+		long confirmationNumber = Long.MAX_VALUE;
+		hotel.bookingsByConfirmationNumber.put(confirmationNumber, booking);
+		assertTrue(hotel.activeBookingsByRoomId.size() == 0);
+
+		//Act
+		hotel.checkin(confirmationNumber);
+
+		//Assert
+		verify(booking).checkIn();
+		assertEquals(hotel.activeBookingsByRoomId.size(), 1);
+	}
+
+	/**
+	 * Wraps to a negative number
+	 * If we are to follow the "Art of Software Testing"
+	 * then this test also reasonably proves
+	 * this test works with Long.MIN_VALUE, and we can assume
+	 * Long.MIN_VALUE - 1 (Wrapping to MAX value) but I am
+	 * going to test them anyway.
+	 */
+	@Test
+	void hotelCheckinWithOverflowingMaxLongConfirmationNumber()
+	{
+		//Arrange
+		long confirmationNumber = Long.MAX_VALUE + 1;
+		assertEquals(confirmationNumber, Long.MIN_VALUE);
+		hotel.bookingsByConfirmationNumber.put(confirmationNumber, booking);
+		assertTrue(hotel.activeBookingsByRoomId.size() == 0);
+
+		//Act
+		hotel.checkin(confirmationNumber);
+
+		//Assert
+		verify(booking).checkIn();
+		assertEquals(hotel.activeBookingsByRoomId.size(), 1);
+	}
+
+	@Test
+	void hotelCheckinWithMinLongConfirmationNumber()
+	{
+		//Arrange
+		long confirmationNumber = Long.MIN_VALUE;
+		hotel.bookingsByConfirmationNumber.put(confirmationNumber, booking);
+		assertTrue(hotel.activeBookingsByRoomId.size() == 0);
+
+		//Act
+		hotel.checkin(confirmationNumber);
+
+		//Assert
+		verify(booking).checkIn();
+		assertEquals(hotel.activeBookingsByRoomId.size(), 1);
+	}
+
+	@Test
+	void hotelCheckinWithOverflowingMinLongConfirmationNumber()
+	{
+		//Arrange
+		long confirmationNumber = Long.MIN_VALUE - 1;
+		assertEquals(confirmationNumber, Long.MAX_VALUE);
+		hotel.bookingsByConfirmationNumber.put(confirmationNumber, booking);
+		assertTrue(hotel.activeBookingsByRoomId.size() == 0);
+
+		//Act
+		hotel.checkin(confirmationNumber);
+
+		//Assert
+		verify(booking).checkIn();
+		assertEquals(hotel.activeBookingsByRoomId.size(), 1);
+	}
+
 }
