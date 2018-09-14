@@ -1,5 +1,6 @@
 package hotel.entities.hotel;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
@@ -47,7 +48,7 @@ class HotelCheckInTests
 
 		//Assert
 		verify(booking).checkIn();
-		assertTrue(hotel.activeBookingsByRoomId.size() == 1);
+		assertEquals(hotel.activeBookingsByRoomId.size(), 1);
 	}
 
 }
