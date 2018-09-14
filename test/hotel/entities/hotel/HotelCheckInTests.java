@@ -17,6 +17,10 @@ import hotel.entities.Hotel;
 @ExtendWith(MockitoExtension.class)
 class HotelCheckInTests
 {
+	//This doesn't need to be a spy because
+	//we can directly put bookings into the
+	//maps inside hotel. We can safely assume
+	//the Java Map interface is thoroughly tested
 	Hotel hotel = new Hotel();
 
 	@Mock Booking booking;
