@@ -40,7 +40,35 @@ class HotelCheckOutTests
 	{
 		//Arrange
 		int roomId = 0;
-		hotel.activeBookingsByRoomId.put(0, booking);
+		hotel.activeBookingsByRoomId.put(roomId, booking);
+
+		//Act
+		hotel.checkout(roomId);
+
+		//Assert
+		verify(booking).checkOut();
+	}
+
+	@Test
+	void hotelCheckoutWithMaxIntRoomId()
+	{
+		//Arrange
+		int roomId = Integer.MAX_VALUE;
+		hotel.activeBookingsByRoomId.put(roomId, booking);
+
+		//Act
+		hotel.checkout(roomId);
+
+		//Assert
+		verify(booking).checkOut();
+	}
+
+	@Test
+	void hotelCheckoutWithMinIntRoomId()
+	{
+		//Arrange
+		int roomId = Integer.MIN_VALUE;
+		hotel.activeBookingsByRoomId.put(roomId, booking);
 
 		//Act
 		hotel.checkout(roomId);
