@@ -16,7 +16,7 @@ import hotel.utils.IOUtils;
 public class BookingCTL {
 
 
-	private static enum State {PHONE, ROOM, REGISTER, TIMES, CREDIT, APPROVED, CANCELLED, COMPLETED}
+	public static enum State {PHONE, ROOM, REGISTER, TIMES, CREDIT, APPROVED, CANCELLED, COMPLETED}
 
 	private BookingUI bookingUI;
 	private Hotel hotel;
@@ -137,7 +137,7 @@ public class BookingCTL {
 
 
 	public void creditDetailsEntered(CreditCardType type, int number, int ccv) {
-		if (state != State.CREDIT) {
+		if (getState() != State.CREDIT) {
 			String mesg = String.format("BookingCTL: creditDetailsEntered : bad state : %s", state);
 			throw new RuntimeException(mesg);
 		}
@@ -170,6 +170,9 @@ public class BookingCTL {
 		bookingUI.displayMessage("Booking completed");
 	}
 
+	public State getState() {
+		return state;
+	}
 
 
 }
