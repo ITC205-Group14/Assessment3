@@ -1,25 +1,29 @@
 package hotel.booking;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 import java.util.Date;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import hotel.booking.BookingCTL.State;
 import hotel.credit.CreditCardType;
 import hotel.entities.Guest;
 import hotel.entities.Hotel;
 import hotel.entities.Room;
 import hotel.entities.RoomType;
 
+/**
+ * These test cases were derived from a cause-effect graph
+ * @author Corey
+ *
+ */
 @ExtendWith(MockitoExtension.class)
 class BookingCreditDetailsEnteredTests
 {
@@ -34,39 +38,57 @@ class BookingCreditDetailsEnteredTests
 	@Mock (name = "arrivalDate")
 	Date arrivalDate = new Date();
 
-	@InjectMocks BookingCTL bookingCTL = new BookingCTL(hotel);
+	@Mock BookingUI bookingUI;
 
-	@BeforeEach
-	void setUp()
-	{
-		MockitoAnnotations.initMocks(this);
-		bookingCTL.setState(State.CREDIT);
-	}
+	@Spy @InjectMocks BookingCTL bookingCTL = new BookingCTL(hotel);
 
 	@Test
 	void testCreditDetailsEnteredInvalidCard()
 	{
 		//Arrange
 		CreditCardType cct = CreditCardType.VISA;
+		int cardNumber = 6;
+		int ccv = 1;
+		when(bookingCTL.getState()).thenReturn(BookingCTL.State.CREDIT);
 
 		//Act
-		bookingCTL.creditDetailsEntered(cct, 6, 1);
+		bookingCTL.creditDetailsEntered(cct, cardNumber, ccv);
 
 		//Assert
-		assertFalse(bookingCTL.isCompleted());
+		verify(bookingUI).displayMessage("Credit Card could not be authorized");
+		verifyNoMoreInteractions(bookingUI);
 	}
 
 	@Test
-	void testCreditDetailsEnteredValidCard()
+	void testCreditDetailsEnteredValidVisaCard()
 	{
 		//Arrange
 		CreditCardType cct = CreditCardType.VISA;
+		int cardNumber = 4;
+		int ccv = 1;
+		when(bookingCTL.getState()).thenReturn(BookingCTL.State.CREDIT);
 
 		//Act
-		bookingCTL.creditDetailsEntered(cct, 4, 1);
+		bookingCTL.creditDetailsEntered(cct, cardNumber, ccv);
 
 		//Assert
-		assertTrue(bookingCTL.isCompleted());
+		verify(bookingUI).setState(BookingUI.State.COMPLETED);
+	}
+
+	@Test
+	void testCreditDetailsEnteredValidMasterCard()
+	{
+		//Arrange
+		CreditCardType cct = CreditCardType.MASTERCARD;
+		int cardNumber = 4;
+		int ccv = 1;
+		when(bookingCTL.getState()).thenReturn(BookingCTL.State.CREDIT);
+
+		//Act
+		bookingCTL.creditDetailsEntered(cct, cardNumber, ccv);
+
+		//Assert
+		verify(bookingUI).setState(BookingUI.State.COMPLETED);
 	}
 
 }
