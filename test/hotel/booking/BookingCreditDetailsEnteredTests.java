@@ -17,7 +17,6 @@ import hotel.credit.CreditCardType;
 import hotel.entities.Guest;
 import hotel.entities.Hotel;
 import hotel.entities.Room;
-import hotel.entities.RoomType;
 
 /**
  * These test cases were derived from a cause-effect graph
@@ -28,16 +27,9 @@ import hotel.entities.RoomType;
 class BookingCreditDetailsEnteredTests
 {
 	@Mock Hotel hotel;
-
-	@Mock (name = "guest")
-	Guest guest = new Guest("Name", "Address", 0);
-
-	@Mock (name = "room")
-	Room room = new Room(0, RoomType.SINGLE);
-
-	@Mock (name = "arrivalDate")
-	Date arrivalDate = new Date();
-
+	@Mock Guest guest;
+	@Mock Room room;
+	@Mock Date arrivalDate;
 	@Mock BookingUI bookingUI;
 
 	@Spy @InjectMocks BookingCTL bookingCTL = new BookingCTL(hotel);
