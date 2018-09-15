@@ -25,8 +25,8 @@ class BookingAddServiceChargeTests
 
 
 	@Mock Guest guest;
-	@Mock Room room = new Room(0, RoomType.DOUBLE);
 	@Mock CreditCard creditCard;
+	Room room = new Room(0, RoomType.DOUBLE);
 	Date arrivalDate = new Date();
 	int stayLength = 1;
 	int numberOfOccupants = 1;
