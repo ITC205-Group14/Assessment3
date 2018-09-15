@@ -105,4 +105,24 @@ class BookingCreditDetailsEnteredTests
 		assertThrows(RuntimeException.class, e);
 	}
 
+	//And the following tests are boundary tests
+	//We know the boundary for number is 5
+	//One of the boundaries (6) was covered in an above cause-effect test
+
+	@Test
+	void testCreditDetailsCardBoundary()
+	{
+		//Arrange
+		CreditCardType cct = CreditCardType.MASTERCARD;
+		int cardNumber = 5;
+		int ccv = 1;
+		when(bookingCTL.getState()).thenReturn(BookingCTL.State.CREDIT);
+
+		//Act
+		bookingCTL.creditDetailsEntered(cct, cardNumber, ccv);
+
+		//Assert
+		verify(bookingUI).setState(BookingUI.State.COMPLETED);
+	}
+
 }
