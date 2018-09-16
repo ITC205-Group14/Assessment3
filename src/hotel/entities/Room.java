@@ -60,11 +60,11 @@ public class Room {
 
 
 	public Booking book(Guest guest, Date arrivalDate, int stayLength, int numberOfOccupants, CreditCard creditCard) {
+		// TODO Auto-generated method stub
+		return null;
 		
-				
-			
 	}
-
+	
 
 	public void checkin() {
 		if (state != State.READY) {
