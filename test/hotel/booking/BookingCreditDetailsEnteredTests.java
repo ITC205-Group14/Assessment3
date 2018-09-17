@@ -1,6 +1,8 @@
 package hotel.booking;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -15,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import hotel.credit.CreditCard;
 import hotel.credit.CreditCardType;
 import hotel.entities.Guest;
 import hotel.entities.Hotel;
@@ -33,6 +36,8 @@ class BookingCreditDetailsEnteredTests
 
 	/**
 	 * These test cases were derived from a cause-effect graph
+	 * With the "effects" being the final output, ie no intermediary
+	 * effects
 	 * @author Corey
 	 *
 	 */
@@ -66,6 +71,7 @@ class BookingCreditDetailsEnteredTests
 		bookingCTL.creditDetailsEntered(cct, cardNumber, ccv);
 
 		//Assert
+		verify(hotel).book(any(Room.class), any(Guest.class), any(Date.class), anyInt(), anyInt(), any(CreditCard.class));
 		verify(bookingUI).setState(BookingUI.State.COMPLETED);
 	}
 
