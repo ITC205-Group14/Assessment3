@@ -6,6 +6,7 @@ import java.util.Date;
 
 import hotel.credit.CreditAuthorizer;
 import hotel.credit.CreditCard;
+import hotel.credit.CreditCardHelper;
 import hotel.credit.CreditCardType;
 import hotel.entities.Guest;
 import hotel.entities.Hotel;
@@ -141,7 +142,7 @@ public class BookingCTL {
 			String mesg = String.format("BookingCTL: creditDetailsEntered : bad state : %s", state);
 			throw new RuntimeException(mesg);
 		}
-		CreditCard creditCard = new CreditCard(type, number, ccv);
+		CreditCard creditCard = CreditCardHelper.loadCreditCard(type, number, ccv);
 		boolean approved = CreditAuthorizer.getInstance().authorize(creditCard, cost);
 		if(approved) {
 			long confirmationNumber = hotel.book(room, guest, arrivalDate, stayLength, occupantNumber, creditCard);
