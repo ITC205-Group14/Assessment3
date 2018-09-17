@@ -139,8 +139,6 @@ class BookingCreditDetailsEnteredTests
 	void testCreditDetailsInvalidStartingState()
 	{
 		//Arrange
-		CreditCardType cct = CreditCardType.MASTERCARD;
-		int cardNumber = 4;
 		int ccv = 1;
 		when(bookingCTL.getState()).thenReturn(BookingCTL.State.COMPLETED);
 
