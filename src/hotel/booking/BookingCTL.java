@@ -34,6 +34,7 @@ public class BookingCTL {
 	private int stayLength;
 
 	private CreditCardHelper creditCardHelper;
+	private CreditAuthorizer creditAuthorizer;
 
 
 	public BookingCTL(Hotel hotel) {
@@ -41,6 +42,7 @@ public class BookingCTL {
 		this.hotel = hotel;
 		state = State.PHONE;
 		creditCardHelper = new CreditCardHelper();
+		creditAuthorizer = CreditAuthorizer.getInstance();
 	}
 
 
@@ -146,7 +148,7 @@ public class BookingCTL {
 			throw new RuntimeException(mesg);
 		}
 		CreditCard creditCard = creditCardHelper.loadCreditCard(type, number, ccv);
-		boolean approved = CreditAuthorizer.getInstance().authorize(creditCard, cost);
+		boolean approved = creditAuthorizer.authorize(creditCard, cost);
 		if(approved) {
 			long confirmationNumber = hotel.book(room, guest, arrivalDate, stayLength, occupantNumber, creditCard);
 			String roomDescription = room.getDescription();
