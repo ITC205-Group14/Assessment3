@@ -33,11 +33,14 @@ public class BookingCTL {
 	private Date arrivalDate;
 	private int stayLength;
 
+	private CreditCardHelper creditCardHelper;
+
 
 	public BookingCTL(Hotel hotel) {
 		this.bookingUI = new BookingUI(this);
 		this.hotel = hotel;
 		state = State.PHONE;
+		creditCardHelper = new CreditCardHelper();
 	}
 
 
@@ -142,7 +145,7 @@ public class BookingCTL {
 			String mesg = String.format("BookingCTL: creditDetailsEntered : bad state : %s", state);
 			throw new RuntimeException(mesg);
 		}
-		CreditCard creditCard = CreditCardHelper.loadCreditCard(type, number, ccv);
+		CreditCard creditCard = creditCardHelper.loadCreditCard(type, number, ccv);
 		boolean approved = CreditAuthorizer.getInstance().authorize(creditCard, cost);
 		if(approved) {
 			long confirmationNumber = hotel.book(room, guest, arrivalDate, stayLength, occupantNumber, creditCard);
