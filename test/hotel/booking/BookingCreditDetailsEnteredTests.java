@@ -66,9 +66,6 @@ class BookingCreditDetailsEnteredTests
 		bookingCTL.creditDetailsEntered(cct, cardNumber, ccv);
 
 		//Assert
-		/*verify(room).getDescription();
-		verify(room).getId();
-		verify(guest).getName();*/
 		verify(bookingUI).displayMessage("Credit Card could not be authorized");
 		verifyNoMoreInteractions(bookingUI);
 	}
