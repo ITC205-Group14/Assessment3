@@ -10,7 +10,7 @@ package hotel.credit;
  */
 public class CreditCardHelper
 {
-	public static CreditCard loadCreditCard(CreditCardType type, int number, int ccv)
+	public CreditCard loadCreditCard(CreditCardType type, int number, int ccv)
 	{
 		return new CreditCard(type, number, ccv);
 	}
