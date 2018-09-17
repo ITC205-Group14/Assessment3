@@ -139,7 +139,6 @@ class BookingCreditDetailsEnteredTests
 	void testCreditDetailsInvalidStartingState()
 	{
 		//Arrange
-		int ccv = 1;
 		when(bookingCTL.getState()).thenReturn(BookingCTL.State.COMPLETED);
 
 		//Act
