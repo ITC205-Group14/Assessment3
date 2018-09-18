@@ -60,9 +60,9 @@ public class Room {
 
 
 	public Booking book(Guest guest, Date arrivalDate, int stayLength, int numberOfOccupants, CreditCard creditCard) {
-		Booking book = new Booking(guest, null, arrivalDate, numberOfOccupants, numberOfOccupants, creditCard);
-		bookings.add(book);
-		return book;		
+		Booking booking = new Booking(guest, null, arrivalDate, numberOfOccupants, numberOfOccupants, creditCard);
+		bookings.add(booking);
+		return booking;		
 	}
 	
 
