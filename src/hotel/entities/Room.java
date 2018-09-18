@@ -57,22 +57,35 @@ public class Room {
 	public boolean isReady() {
 		return state == State.READY;
 	}
+	
+	
+	public boolean isOccupied() {
+		return state == State.OCCUPIED;
+		
+	}
 
 
 	public Booking book(Guest guest, Date arrivalDate, int stayLength, int numberOfOccupants, CreditCard creditCard) {
-		// TODO Auto-generated method stub
-		return null;		
+		Booking book = new Booking(guest, this, arrivalDate, numberOfOccupants, numberOfOccupants, creditCard);
+		bookings.add(booking);
+		return book;		
 	}
-
+	
 
 	public void checkin() {
-		// TODO Auto-generated method stub
-	}
+		if (state != State.READY) {
+			throw new RuntimeException("Room is not ready, unable to check-in");
+		}				
+		state = State.OCCUPIED;		
+}
 
 
 	public void checkout(Booking booking) {
-		// TODO Auto-generated method stub
+		if (state != State.OCCUPIED) {
+			throw new RuntimeException("Room is not occupied, unable to checkout");
+		}			
+		bookings.remove(booking);
+		state = State.READY;
 	}
-
 
 }
