@@ -67,10 +67,9 @@ public class Room {
 
 
 	public Booking book(Guest guest, Date arrivalDate, int stayLength, int numberOfOccupants, CreditCard creditCard) {
-		Booking book = new Booking(guest, this, arrivalDate, numberOfOccupants, numberOfOccupants, creditCard);
-		//TODO <corey>: This doesn't work Chris
-		//bookings.add(booking);
-		return book;
+		Booking booking = new Booking(guest, this, arrivalDate, numberOfOccupants, numberOfOccupants, creditCard);
+		bookings.add(booking);
+		return booking;
 	}
 
 
