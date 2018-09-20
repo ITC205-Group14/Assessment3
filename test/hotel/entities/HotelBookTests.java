@@ -1,6 +1,7 @@
 package hotel.entities;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -14,10 +15,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import hotel.credit.CreditCard;
-import hotel.entities.Guest;
-import hotel.entities.Hotel;
-import hotel.entities.Room;
-import hotel.entities.RoomType;
 
 @ExtendWith(MockitoExtension.class)
 class HotelBookTests
@@ -42,7 +39,7 @@ class HotelBookTests
 		Date arrivalDate = new GregorianCalendar(2018, 0, 1).getTime();
 		int stayLength = 3;
 		int occupantNumber = 1;
-		long expected = 1012018123;
+		long expected = 102018123;
 		assertEquals(hotel.bookingsByConfirmationNumber.size(), 0);
 
 		//Act
@@ -57,17 +54,20 @@ class HotelBookTests
 	void bookConfirmationInvalidDate()
 	{
 		//Arrange
-		Date arrivalDate = new GregorianCalendar(Integer.MAX_VALUE, 01, 01).getTime();
+		Date arrivalDate = new GregorianCalendar(500000000, 0, 1).getTime();
 		int stayLength = 3;
 		int occupantNumber = 1;
+		long expected = 10500000000123L;
 		assertEquals(hotel.bookingsByConfirmationNumber.size(), 0);
 
 		//Act
-		Executable e = () -> hotel.book(room, guest, arrivalDate, stayLength, occupantNumber, creditCard);
+		long confirmationNumber = hotel.book(room, guest, arrivalDate, stayLength, occupantNumber, creditCard);
 
 		//Assert
-		assertThrows(NumberFormatException.class, e);
-		assertEquals(hotel.bookingsByConfirmationNumber.size(), 0);
+		//We expect an overflow
+		assertNotEquals(expected, confirmationNumber);
+		//But, because of the code it should still be added
+		assertEquals(hotel.bookingsByConfirmationNumber.size(), 1);
 	}
 
 	@Test
@@ -98,7 +98,7 @@ class HotelBookTests
 		Date arrivalDate = new GregorianCalendar(2018, 0, 1).getTime();
 		int stayLength = 3;
 		int occupantNumber = 1;
-		long expected = 1012018123;
+		long expected = 102018123;
 		assertEquals(hotel.bookingsByConfirmationNumber.size(), 0);
 
 		//Act
@@ -117,7 +117,7 @@ class HotelBookTests
 		Date arrivalDate = new GregorianCalendar(2018, 0, 1).getTime();
 		int stayLength = 3;
 		int occupantNumber = 1;
-		long expected = 1012018123;
+		long expected = 102018123;
 		assertEquals(hotel.bookingsByConfirmationNumber.size(), 0);
 
 		//Act
@@ -136,7 +136,7 @@ class HotelBookTests
 		Date arrivalDate = new GregorianCalendar(2018, 0, 1).getTime();
 		int stayLength = 3;
 		int occupantNumber = -1;
-		long expected = 1012018123;
+		long expected = 102018123;
 		assertEquals(hotel.bookingsByConfirmationNumber.size(), 0);
 
 		//Act
@@ -155,7 +155,7 @@ class HotelBookTests
 		Date arrivalDate = new GregorianCalendar(2018, 0, 1).getTime();
 		int stayLength = 3;
 		int occupantNumber = Integer.MAX_VALUE;
-		long expected = 1012018123;
+		long expected = 102018123;
 		assertEquals(hotel.bookingsByConfirmationNumber.size(), 0);
 
 		//Act
@@ -174,7 +174,7 @@ class HotelBookTests
 		Date arrivalDate = new GregorianCalendar(2018, 0, 1).getTime();
 		int stayLength = 3;
 		int occupantNumber = Integer.MIN_VALUE;
-		long expected = 1012018123;
+		long expected = 102018123;
 		assertEquals(hotel.bookingsByConfirmationNumber.size(), 0);
 
 		//Act
@@ -192,7 +192,7 @@ class HotelBookTests
 		//Arrange
 		Date arrivalDate = new GregorianCalendar(2018, 0, 1).getTime();
 		int occupantNumber = 1;
-		long expected = 1012018123;
+		long expected = 102018123;
 		assertEquals(hotel.bookingsByConfirmationNumber.size(), 0);
 
 		//Act
@@ -210,7 +210,7 @@ class HotelBookTests
 		//Arrange
 		Date arrivalDate = new GregorianCalendar(2018, 0, 1).getTime();
 		int occupantNumber = 1;
-		long expected = 1012018123;
+		long expected = 102018123;
 		assertEquals(hotel.bookingsByConfirmationNumber.size(), 0);
 
 		//Act

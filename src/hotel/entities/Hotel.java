@@ -1,6 +1,6 @@
 package hotel.entities;
 
-import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -89,8 +89,17 @@ public class Hotel {
 	public long book(Room room, Guest guest,
 			Date arrivalDate, int stayLength, int occupantNumber,
 			CreditCard creditCard) {
-		SimpleDateFormat sdf = new SimpleDateFormat("ddMMYYYY");
-		long confirmationNumber = Long.parseLong(sdf.format(arrivalDate) + room.id);
+
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(arrivalDate);
+
+		int year = calendar.get(Calendar.YEAR);
+		int month = calendar.get(Calendar.MONTH);
+		int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+		String numberString = String.format("%d%d%d%d", day, month, year, room.id);
+		long confirmationNumber = Long.parseLong(numberString);
+
 		room.book(guest, arrivalDate, stayLength, occupantNumber, creditCard);
 		Booking booking = new Booking(guest, room, arrivalDate, stayLength, occupantNumber, creditCard);
 		bookingsByConfirmationNumber.put(confirmationNumber, booking);
