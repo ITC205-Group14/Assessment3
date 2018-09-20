@@ -1,6 +1,7 @@
-package hotel;
+package hotel.booking;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyDouble;
@@ -12,6 +13,7 @@ import java.util.Date;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.function.Executable;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -29,7 +31,7 @@ import hotel.entities.Hotel;
 import hotel.entities.Room;
 
 @ExtendWith(MockitoExtension.class)
-class BookingCreditDetailsEnteredIntegrationTests
+class BookingCreditDetailsEnteredTests
 {
 	@Mock Hotel hotel;
 	@Mock Guest guest;
@@ -40,28 +42,27 @@ class BookingCreditDetailsEnteredIntegrationTests
 
 	@Mock BookingUI bookingUI;
 	@Mock CreditCardHelper creditCardHelper;
-
-	CreditCardType cct = CreditCardType.VISA;
-	int cardNumber = 1;
-	int ccv = 1;
-
 	@Mock CreditCard creditCard;
-
 	@Mock CreditAuthorizer creditAuthorizer;
 
 	@Spy @InjectMocks BookingCTL bookingCTL = new BookingCTL(hotel);
 
+	CreditCardType cct = CreditCardType.VISA;
+	int cardNumber = 1;
+	int ccv = 1;
 
 	/**
 	 * @author Corey
 	 *
 	 */
 	@Test
-	void testCreditDetailsEnteredInvalidCardRealCard()
+	void testCreditDetailsEnteredInvalidCard()
 	{
 		//Arrange
 		when(bookingCTL.getState()).thenReturn(BookingCTL.State.CREDIT);
-		when(creditCardHelper.loadCreditCard(cct, cardNumber, ccv)).thenReturn(new CreditCard(cct, 5, 1));
+		when(creditCardHelper.loadCreditCard(cct, cardNumber, ccv))
+		.thenReturn(creditCard);
+		when(creditAuthorizer.authorize(any(CreditCard.class), anyDouble())).thenReturn(false);
 
 		//Act
 		bookingCTL.creditDetailsEntered(cct, cardNumber, ccv);
@@ -134,6 +135,19 @@ class BookingCreditDetailsEnteredIntegrationTests
 		when(bookingCTL.getState()).thenCallRealMethod();
 		assertEquals(BookingCTL.State.COMPLETED, bookingCTL.getState());
 
+	}
+
+	@Test
+	void testCreditDetailsInvalidStartingState()
+	{
+		//Arrange
+		when(bookingCTL.getState()).thenReturn(BookingCTL.State.COMPLETED);
+
+		//Act
+		Executable e = () -> bookingCTL.creditDetailsEntered(cct, cardNumber, ccv);
+
+		//Assert
+		assertThrows(RuntimeException.class, e);
 	}
 
 }
