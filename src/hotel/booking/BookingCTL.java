@@ -19,22 +19,22 @@ public class BookingCTL {
 
 	public static enum State {PHONE, ROOM, REGISTER, TIMES, CREDIT, APPROVED, CANCELLED, COMPLETED}
 
-	private BookingUI bookingUI;
-	private Hotel hotel;
+	BookingUI bookingUI;
+	Hotel hotel;
 
-	private Guest guest;
-	private Room room;
-	private double cost;
+	Guest guest;
+	Room room;
+	double cost;
 
-	private State state;
-	private int phoneNumber;
-	private RoomType selectedRoomType;
-	private int occupantNumber;
-	private Date arrivalDate;
-	private int stayLength;
+	State state;
+	int phoneNumber;
+	RoomType selectedRoomType;
+	int occupantNumber;
+	Date arrivalDate;
+	int stayLength;
 
-	private CreditCardHelper creditCardHelper;
-	private CreditAuthorizer creditAuthorizer;
+	CreditCardHelper creditCardHelper;
+	CreditAuthorizer creditAuthorizer;
 
 
 	public BookingCTL(Hotel hotel) {
