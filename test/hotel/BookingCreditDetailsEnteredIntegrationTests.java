@@ -1,7 +1,6 @@
 package hotel;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyDouble;
@@ -13,7 +12,6 @@ import java.util.Date;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.function.Executable;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -136,19 +134,6 @@ class BookingCreditDetailsEnteredIntegrationTests
 		when(bookingCTL.getState()).thenCallRealMethod();
 		assertEquals(BookingCTL.State.COMPLETED, bookingCTL.getState());
 
-	}
-
-	@Test
-	void testCreditDetailsInvalidStartingState()
-	{
-		//Arrange
-		when(bookingCTL.getState()).thenReturn(BookingCTL.State.COMPLETED);
-
-		//Act
-		Executable e = () -> bookingCTL.creditDetailsEntered(cct, cardNumber, ccv);
-
-		//Assert
-		assertThrows(RuntimeException.class, e);
 	}
 
 }
