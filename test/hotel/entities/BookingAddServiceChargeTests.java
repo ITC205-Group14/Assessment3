@@ -1,4 +1,4 @@
-package hotel.entities.booking;
+package hotel.entities;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

@@ -1,4 +1,4 @@
-package hotel.booking;
+package hotel;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -20,6 +20,8 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import hotel.booking.BookingCTL;
+import hotel.booking.BookingUI;
 import hotel.credit.CreditAuthorizer;
 import hotel.credit.CreditCard;
 import hotel.credit.CreditCardHelper;
@@ -29,7 +31,7 @@ import hotel.entities.Hotel;
 import hotel.entities.Room;
 
 @ExtendWith(MockitoExtension.class)
-class BookingCreditDetailsEnteredTests
+class BookingCreditDetailsEnteredIntegrationTests
 {
 	@Mock Hotel hotel;
 	@Mock Guest guest;
@@ -40,27 +42,28 @@ class BookingCreditDetailsEnteredTests
 
 	@Mock BookingUI bookingUI;
 	@Mock CreditCardHelper creditCardHelper;
-	@Mock CreditCard creditCard;
-	@Mock CreditAuthorizer creditAuthorizer;
-
-	@Spy @InjectMocks BookingCTL bookingCTL = new BookingCTL(hotel);
 
 	CreditCardType cct = CreditCardType.VISA;
 	int cardNumber = 1;
 	int ccv = 1;
+
+	@Mock CreditCard creditCard;
+
+	@Mock CreditAuthorizer creditAuthorizer;
+
+	@Spy @InjectMocks BookingCTL bookingCTL = new BookingCTL(hotel);
+
 
 	/**
 	 * @author Corey
 	 *
 	 */
 	@Test
-	void testCreditDetailsEnteredInvalidCard()
+	void testCreditDetailsEnteredInvalidCardRealCard()
 	{
 		//Arrange
 		when(bookingCTL.getState()).thenReturn(BookingCTL.State.CREDIT);
-		when(creditCardHelper.loadCreditCard(cct, cardNumber, ccv))
-		.thenReturn(creditCard);
-		when(creditAuthorizer.authorize(any(CreditCard.class), anyDouble())).thenReturn(false);
+		when(creditCardHelper.loadCreditCard(cct, cardNumber, ccv)).thenReturn(new CreditCard(cct, 5, 1));
 
 		//Act
 		bookingCTL.creditDetailsEntered(cct, cardNumber, ccv);

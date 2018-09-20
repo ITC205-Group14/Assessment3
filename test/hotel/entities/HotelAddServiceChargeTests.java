@@ -1,4 +1,4 @@
-package hotel.entities.hotel;
+package hotel.entities;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
