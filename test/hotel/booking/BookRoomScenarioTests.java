@@ -35,7 +35,8 @@ class BookRoomScenarioTests
 	String existingName = "Foo";
 	String existingAddress = "Bar";
 	int existingPhone = 555;
-	RoomType rt = RoomType.SINGLE;
+	RoomType rtSingle = RoomType.SINGLE;
+	RoomType rtDouble = RoomType.DOUBLE;
 	Date arrival = new Date();
 	int stayLength = 3;
 
@@ -56,7 +57,8 @@ class BookRoomScenarioTests
 		//Add a guest to test with
 		hotel.registerGuest(existingName, existingAddress, existingPhone);
 		//Add room to test with
-		hotel.addRoom(rt, 101);
+		hotel.addRoom(rtSingle, 101);
+		hotel.addRoom(rtDouble, 201);
 	}
 
 	@Test
@@ -70,7 +72,7 @@ class BookRoomScenarioTests
 		//Check the state as we go, because why not?
 		bookingCTL.phoneNumberEntered(existingPhone);
 		assertEquals(BookingCTL.State.ROOM, bookingCTL.getState());
-		bookingCTL.roomTypeAndOccupantsEntered(rt, 1);
+		bookingCTL.roomTypeAndOccupantsEntered(rtSingle, 1);
 		assertEquals(BookingCTL.State.TIMES, bookingCTL.getState());
 		bookingCTL.bookingTimesEntered(arrival, stayLength);
 		assertEquals(BookingCTL.State.CREDIT, bookingCTL.getState());
@@ -82,13 +84,13 @@ class BookRoomScenarioTests
 		verify(hotel).isRegistered(existingPhone);
 		verify(hotel, times(2)).findGuestByPhoneNumber(existingPhone);
 		verify(bookingUI).displayGuestDetails(existingName, existingAddress, existingPhone);
-		assertEquals(rt, bookingCTL.selectedRoomType);
+		assertEquals(rtSingle, bookingCTL.selectedRoomType);
 		assertEquals(1, bookingCTL.occupantNumber);
 		assertEquals(arrival, bookingCTL.arrivalDate);
 		assertEquals(stayLength, bookingCTL.stayLength);
-		verify(bookingUI).displayBookingDetails(rt.getDescription(), arrival, stayLength, rt.calculateCost(arrival, stayLength));
+		verify(bookingUI).displayBookingDetails(rtSingle.getDescription(), arrival, stayLength, rtSingle.calculateCost(arrival, stayLength));
 		verify(hotel).book(eq(bookingCTL.room), eq(bookingCTL.guest), eq(arrival), eq(stayLength), eq(1), any(CreditCard.class));
-		verify(bookingUI).displayConfirmedBooking(eq(rt.getDescription()), eq(101), eq(arrival), eq(stayLength), eq(existingName), eq(ccType.getVendor()), eq(ccNumber), anyDouble(), anyLong());
+		verify(bookingUI).displayConfirmedBooking(eq(rtSingle.getDescription()), eq(101), eq(arrival), eq(stayLength), eq(existingName), eq(ccType.getVendor()), eq(ccNumber), anyDouble(), anyLong());
 	}
 
 	@Test
@@ -105,7 +107,7 @@ class BookRoomScenarioTests
 		//Check the state as we go, because why not?
 		bookingCTL.phoneNumberEntered(5);
 		assertEquals(BookingCTL.State.ROOM, bookingCTL.getState());
-		bookingCTL.roomTypeAndOccupantsEntered(rt, 1);
+		bookingCTL.roomTypeAndOccupantsEntered(rtSingle, 1);
 		assertEquals(BookingCTL.State.TIMES, bookingCTL.getState());
 		bookingCTL.bookingTimesEntered(arrival, stayLength);
 		assertEquals(BookingCTL.State.CREDIT, bookingCTL.getState());
@@ -117,13 +119,13 @@ class BookRoomScenarioTests
 		verify(hotel).isRegistered(5);
 		verify(hotel, times(3)).findGuestByPhoneNumber(5);
 		verify(bookingUI).displayGuestDetails("Newmann", "Also fake", 5);
-		assertEquals(rt, bookingCTL.selectedRoomType);
+		assertEquals(rtSingle, bookingCTL.selectedRoomType);
 		assertEquals(1, bookingCTL.occupantNumber);
 		assertEquals(arrival, bookingCTL.arrivalDate);
 		assertEquals(stayLength, bookingCTL.stayLength);
-		verify(bookingUI).displayBookingDetails(rt.getDescription(), arrival, stayLength, rt.calculateCost(arrival, stayLength));
+		verify(bookingUI).displayBookingDetails(rtSingle.getDescription(), arrival, stayLength, rtSingle.calculateCost(arrival, stayLength));
 		verify(hotel).book(eq(bookingCTL.room), eq(bookingCTL.guest), eq(arrival), eq(stayLength), eq(1), any(CreditCard.class));
-		verify(bookingUI).displayConfirmedBooking(eq(rt.getDescription()), eq(101), eq(arrival), eq(stayLength), eq("Newmann"), eq(ccType.getVendor()), eq(ccNumber), anyDouble(), anyLong());
+		verify(bookingUI).displayConfirmedBooking(eq(rtSingle.getDescription()), eq(101), eq(arrival), eq(stayLength), eq("Newmann"), eq(ccType.getVendor()), eq(ccNumber), anyDouble(), anyLong());
 	}
 
 	@Test
@@ -132,13 +134,19 @@ class BookRoomScenarioTests
 		//Arrange ---
 		//Check if guest really does exist
 		assertNotNull(hotel.findGuestByPhoneNumber(existingPhone));
-		hotel.roomsByType.get(rt).get(101).book(new Guest("BookedBeforeYou", "S", 34), arrival, stayLength, 1, new CreditCard(ccType, ccNumber, ccCcv));
+		hotel.roomsByType.get(rtSingle).get(101).book(new Guest("BookedBeforeYou", "S", 34), arrival, stayLength, 1, new CreditCard(ccType, ccNumber, ccCcv));
 
 		//Act ---
 		//Check the state as we go, because why not?
 		bookingCTL.phoneNumberEntered(existingPhone);
 		assertEquals(BookingCTL.State.ROOM, bookingCTL.getState());
-		bookingCTL.roomTypeAndOccupantsEntered(rt, 1);
+		bookingCTL.roomTypeAndOccupantsEntered(rtSingle, 1);
+		assertEquals(BookingCTL.State.TIMES, bookingCTL.getState());
+		bookingCTL.bookingTimesEntered(arrival, stayLength);
+		assertEquals(BookingCTL.State.ROOM, bookingCTL.getState());
+		//We go back to ROOM because there is already a guest
+		//This will allow us to select a different room type, date etc
+		bookingCTL.roomTypeAndOccupantsEntered(rtDouble, 1);
 		assertEquals(BookingCTL.State.TIMES, bookingCTL.getState());
 		bookingCTL.bookingTimesEntered(arrival, stayLength);
 		assertEquals(BookingCTL.State.CREDIT, bookingCTL.getState());
@@ -146,17 +154,17 @@ class BookRoomScenarioTests
 		assertEquals(BookingCTL.State.COMPLETED, bookingCTL.getState());
 
 		//Assert ---
-		verify(bookingUI, times(4)).setState(any());
+		verify(bookingUI, times(6)).setState(any());
 		verify(hotel).isRegistered(existingPhone);
 		verify(hotel, times(2)).findGuestByPhoneNumber(existingPhone);
 		verify(bookingUI).displayGuestDetails(existingName, existingAddress, existingPhone);
-		assertEquals(rt, bookingCTL.selectedRoomType);
+		assertEquals(rtDouble, bookingCTL.selectedRoomType);
 		assertEquals(1, bookingCTL.occupantNumber);
 		assertEquals(arrival, bookingCTL.arrivalDate);
 		assertEquals(stayLength, bookingCTL.stayLength);
-		verify(bookingUI).displayBookingDetails(rt.getDescription(), arrival, stayLength, rt.calculateCost(arrival, stayLength));
+		verify(bookingUI).displayBookingDetails(rtDouble.getDescription(), arrival, stayLength, rtDouble.calculateCost(arrival, stayLength));
 		verify(hotel).book(eq(bookingCTL.room), eq(bookingCTL.guest), eq(arrival), eq(stayLength), eq(1), any(CreditCard.class));
-		verify(bookingUI).displayConfirmedBooking(eq(rt.getDescription()), eq(101), eq(arrival), eq(stayLength), eq(existingName), eq(ccType.getVendor()), eq(ccNumber), anyDouble(), anyLong());
+		verify(bookingUI).displayConfirmedBooking(eq(rtDouble.getDescription()), eq(201), eq(arrival), eq(stayLength), eq(existingName), eq(ccType.getVendor()), eq(ccNumber), anyDouble(), anyLong());
 	}
 
 }
