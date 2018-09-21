@@ -14,13 +14,13 @@ import hotel.utils.IOUtils;
 
 public class CheckoutCTL {
 
-	private enum State {ROOM, ACCEPT, CREDIT, CANCELLED, COMPLETED };
+	enum State {ROOM, ACCEPT, CREDIT, CANCELLED, COMPLETED };
 	
-	private Hotel hotel;
-	private State state;
-	private CheckoutUI checkoutUI;
-	private double total;
-	private int roomId;
+	Hotel hotel;
+	State state;
+	CheckoutUI checkoutUI;
+	double total;
+	int roomId;
 
 
 	public CheckoutCTL(Hotel hotel) {
@@ -98,7 +98,29 @@ public class CheckoutCTL {
 
 	
 	public void creditDetailsEntered(CreditCardType type, int number, int ccv) {
-		// TODO Auto-generated method stub
+		if (state != State.CREDIT) {
+			String mesg = String.format("CheckoutCTL: bookingTimesEntered : bad state : %s", state);
+			throw new RuntimeException(mesg);
+		}
+		CreditCard card = new CreditCard(type, number, ccv);
+		boolean approved = CreditAuthorizer.getInstance().authorize(card, total);
+		if (!approved) {
+			String outputStr = String.format(
+					"%s credit card number %d was not authorized for $%.2f",
+					type.getVendor(), number, total);
+					
+			checkoutUI.displayMessage(outputStr);
+			//cancel();
+		}
+		else {
+			hotel.checkout(roomId);
+			String outputStr = String.format(
+					"%s credit card number %d was debited $%.2f",
+					card.getType().getVendor(), card.getNumber(), total);
+			checkoutUI.displayMessage(outputStr);
+			state = State.COMPLETED;
+			checkoutUI.setState(CheckoutUI.State.COMPLETED);
+		}
 	}
 
 

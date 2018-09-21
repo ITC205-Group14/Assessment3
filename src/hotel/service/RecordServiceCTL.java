@@ -49,7 +49,15 @@ public class RecordServiceCTL {
 	
 	
 	public void serviceDetailsEntered(ServiceType serviceType, double cost) {
-		// TODO Auto-generated method stub
+		if (state != State.SERVICE) {
+			String mesg = String.format("PayForServiceCTL: serviceDetailsEntered : bad state : %s", state);
+			throw new RuntimeException(mesg);
+		}
+		hotel.addServiceCharge(roomNumber, serviceType, cost);
+		
+		recordServiceUI.displayServiceChargeMessage(roomNumber, cost, serviceType.getDescription());
+		state = State.COMPLETED;
+		recordServiceUI.setState(RecordServiceUI.State.COMPLETED);
 	}
 
 

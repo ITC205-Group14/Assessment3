@@ -9,13 +9,13 @@ import hotel.utils.IOUtils;
 
 public class CheckinCTL {
 	
-	private enum State {CHECKING, CONFIRMING, CANCELLED, COMPLETED };
+	enum State {CHECKING, CONFIRMING, CANCELLED, COMPLETED };
 	
-	private Hotel hotel;
-	private CheckinUI checkInUI;
-	private State state;
-	private Booking booking = null;
-	private long confirmationNumber;
+	Hotel hotel;
+	CheckinUI checkInUI;
+	State state;
+	Booking booking = null;
+	long confirmationNumber;
 	
 
 	public CheckinCTL(Hotel hotel) {
@@ -80,7 +80,19 @@ public class CheckinCTL {
 
 	
 	public void checkInConfirmed(boolean confirmed) {
-		// TODO Auto-generated method stub
+		if (state != State.CONFIRMING) {
+			String mesg = String.format("CheckInCTL: checkInConfirmed : bad state : %s", state);
+			throw new RuntimeException(mesg);
+		}		
+		if (confirmed) {
+			hotel.checkin(confirmationNumber);
+			checkInUI.displayMessage("Check in confirmed");	
+			state = State.COMPLETED;
+			checkInUI.setState(CheckinUI.State.COMPLETED);
+		}
+		else {
+			cancel();
+		}		
 	}
 
 
