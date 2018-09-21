@@ -131,6 +131,9 @@ public class BookingCTL {
 					format.format(departureDate));
 
 			bookingUI.displayMessage(notAvailableStr);
+
+			bookingUI.setState(BookingUI.State.ROOM);
+			state = State.ROOM;
 		}
 		else {
 			cost = selectedRoomType.calculateCost(arrivalDate, stayLength);
