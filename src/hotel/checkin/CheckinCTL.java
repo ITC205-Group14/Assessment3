@@ -9,13 +9,13 @@ import hotel.utils.IOUtils;
 
 public class CheckinCTL {
 	
-	private enum State {CHECKING, CONFIRMING, CANCELLED, COMPLETED };
+	enum State {CHECKING, CONFIRMING, CANCELLED, COMPLETED };
 	
-	private Hotel hotel;
-	private CheckinUI checkInUI;
-	private State state;
-	private Booking booking = null;
-	private long confirmationNumber;
+	Hotel hotel;
+	CheckinUI checkInUI;
+	State state;
+	Booking booking = null;
+	long confirmationNumber;
 	
 
 	public CheckinCTL(Hotel hotel) {
