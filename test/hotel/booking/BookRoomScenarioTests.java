@@ -167,4 +167,32 @@ class BookRoomScenarioTests
 		verify(bookingUI).displayConfirmedBooking(eq(rtDouble.getDescription()), eq(201), eq(arrival), eq(stayLength), eq(existingName), eq(ccType.getVendor()), eq(ccNumber), anyDouble(), anyLong());
 	}
 
+	@Test
+	void ExistingGuestBooksIntoUnavaliableRoomThenCancels()
+	{
+		//Arrange ---
+		//Check if guest really does exist
+		assertNotNull(hotel.findGuestByPhoneNumber(existingPhone));
+		hotel.roomsByType.get(rtSingle).get(101).book(new Guest("BookedBeforeYou", "S", 34), arrival, stayLength, 1, new CreditCard(ccType, ccNumber, ccCcv));
+
+		//Act ---
+		//Check the state as we go, because why not?
+		bookingCTL.phoneNumberEntered(existingPhone);
+		assertEquals(BookingCTL.State.ROOM, bookingCTL.getState());
+		bookingCTL.roomTypeAndOccupantsEntered(rtSingle, 1);
+		assertEquals(BookingCTL.State.TIMES, bookingCTL.getState());
+		bookingCTL.bookingTimesEntered(arrival, stayLength);
+		assertEquals(BookingCTL.State.ROOM, bookingCTL.getState());
+
+		bookingCTL.cancel();
+		assertEquals(BookingCTL.State.CANCELLED, bookingCTL.getState());
+
+		//Assert ---
+		verify(bookingUI, times(4)).setState(any());
+		verify(hotel).isRegistered(existingPhone);
+		verify(hotel, times(2)).findGuestByPhoneNumber(existingPhone);
+		verify(bookingUI).displayGuestDetails(existingName, existingAddress, existingPhone);
+		verify(bookingUI).displayMessage("Booking cancelled");
+	}
+
 }
