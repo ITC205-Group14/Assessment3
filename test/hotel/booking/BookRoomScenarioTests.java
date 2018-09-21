@@ -195,4 +195,40 @@ class BookRoomScenarioTests
 		verify(bookingUI).displayMessage("Booking cancelled");
 	}
 
+	@Test
+	void ExistingGuestCreditCardRefusedThenEntersValidCard()
+	{
+		//Arrange ---
+		//Check if guest really does exist
+		assertNotNull(hotel.findGuestByPhoneNumber(existingPhone));
+
+		//Act ---
+		//Check the state as we go, because why not?
+		bookingCTL.phoneNumberEntered(existingPhone);
+		assertEquals(BookingCTL.State.ROOM, bookingCTL.getState());
+		bookingCTL.roomTypeAndOccupantsEntered(rtSingle, 1);
+		assertEquals(BookingCTL.State.TIMES, bookingCTL.getState());
+		bookingCTL.bookingTimesEntered(arrival, stayLength);
+		assertEquals(BookingCTL.State.CREDIT, bookingCTL.getState());
+		bookingCTL.creditDetailsEntered(ccType, 6, ccCcv);
+		//We want to STAY in credit, because the credit card was invalid
+		assertEquals(BookingCTL.State.CREDIT, bookingCTL.getState());
+		bookingCTL.creditDetailsEntered(ccType, ccNumber, ccCcv);
+		assertEquals(BookingCTL.State.COMPLETED, bookingCTL.getState());
+
+		//Assert ---
+		verify(bookingUI).displayMessage("Credit Card could not be authorized");
+		verify(bookingUI, times(4)).setState(any());
+		verify(hotel).isRegistered(existingPhone);
+		verify(hotel, times(2)).findGuestByPhoneNumber(existingPhone);
+		verify(bookingUI).displayGuestDetails(existingName, existingAddress, existingPhone);
+		assertEquals(rtSingle, bookingCTL.selectedRoomType);
+		assertEquals(1, bookingCTL.occupantNumber);
+		assertEquals(arrival, bookingCTL.arrivalDate);
+		assertEquals(stayLength, bookingCTL.stayLength);
+		verify(bookingUI).displayBookingDetails(rtSingle.getDescription(), arrival, stayLength, rtSingle.calculateCost(arrival, stayLength));
+		verify(hotel).book(eq(bookingCTL.room), eq(bookingCTL.guest), eq(arrival), eq(stayLength), eq(1), any(CreditCard.class));
+		verify(bookingUI).displayConfirmedBooking(eq(rtSingle.getDescription()), eq(101), eq(arrival), eq(stayLength), eq(existingName), eq(ccType.getVendor()), eq(ccNumber), anyDouble(), anyLong());
+	}
+
 }
