@@ -77,9 +77,9 @@ class BookRoomScenarioTests
 		bookingCTL.bookingTimesEntered(arrival, stayLength);
 		assertEquals(BookingCTL.State.CREDIT, bookingCTL.getState());
 		bookingCTL.creditDetailsEntered(ccType, ccNumber, ccCcv);
-		assertEquals(BookingCTL.State.COMPLETED, bookingCTL.getState());
 
 		//Assert ---
+		assertEquals(BookingCTL.State.COMPLETED, bookingCTL.getState());
 		verify(bookingUI, times(4)).setState(any());
 		verify(hotel).isRegistered(existingPhone);
 		verify(hotel, times(2)).findGuestByPhoneNumber(existingPhone);
@@ -112,9 +112,9 @@ class BookRoomScenarioTests
 		bookingCTL.bookingTimesEntered(arrival, stayLength);
 		assertEquals(BookingCTL.State.CREDIT, bookingCTL.getState());
 		bookingCTL.creditDetailsEntered(ccType, ccNumber, ccCcv);
-		assertEquals(BookingCTL.State.COMPLETED, bookingCTL.getState());
 
 		//Assert ---
+		assertEquals(BookingCTL.State.COMPLETED, bookingCTL.getState());
 		verify(bookingUI, times(4)).setState(any());
 		verify(hotel).isRegistered(5);
 		verify(hotel, times(3)).findGuestByPhoneNumber(5);
@@ -151,9 +151,9 @@ class BookRoomScenarioTests
 		bookingCTL.bookingTimesEntered(arrival, stayLength);
 		assertEquals(BookingCTL.State.CREDIT, bookingCTL.getState());
 		bookingCTL.creditDetailsEntered(ccType, ccNumber, ccCcv);
-		assertEquals(BookingCTL.State.COMPLETED, bookingCTL.getState());
 
 		//Assert ---
+		assertEquals(BookingCTL.State.COMPLETED, bookingCTL.getState());
 		verify(bookingUI, times(6)).setState(any());
 		verify(hotel).isRegistered(existingPhone);
 		verify(hotel, times(2)).findGuestByPhoneNumber(existingPhone);
@@ -183,11 +183,10 @@ class BookRoomScenarioTests
 		assertEquals(BookingCTL.State.TIMES, bookingCTL.getState());
 		bookingCTL.bookingTimesEntered(arrival, stayLength);
 		assertEquals(BookingCTL.State.ROOM, bookingCTL.getState());
-
 		bookingCTL.cancel();
-		assertEquals(BookingCTL.State.CANCELLED, bookingCTL.getState());
 
 		//Assert ---
+		assertEquals(BookingCTL.State.CANCELLED, bookingCTL.getState());
 		verify(bookingUI, times(4)).setState(any());
 		verify(hotel).isRegistered(existingPhone);
 		verify(hotel, times(2)).findGuestByPhoneNumber(existingPhone);
@@ -214,9 +213,9 @@ class BookRoomScenarioTests
 		//We want to STAY in credit, because the credit card was invalid
 		assertEquals(BookingCTL.State.CREDIT, bookingCTL.getState());
 		bookingCTL.creditDetailsEntered(ccType, ccNumber, ccCcv);
-		assertEquals(BookingCTL.State.COMPLETED, bookingCTL.getState());
 
 		//Assert ---
+		assertEquals(BookingCTL.State.COMPLETED, bookingCTL.getState());
 		verify(bookingUI).displayMessage("Credit Card could not be authorized");
 		verify(bookingUI, times(4)).setState(any());
 		verify(hotel).isRegistered(existingPhone);
@@ -229,6 +228,36 @@ class BookRoomScenarioTests
 		verify(bookingUI).displayBookingDetails(rtSingle.getDescription(), arrival, stayLength, rtSingle.calculateCost(arrival, stayLength));
 		verify(hotel).book(eq(bookingCTL.room), eq(bookingCTL.guest), eq(arrival), eq(stayLength), eq(1), any(CreditCard.class));
 		verify(bookingUI).displayConfirmedBooking(eq(rtSingle.getDescription()), eq(101), eq(arrival), eq(stayLength), eq(existingName), eq(ccType.getVendor()), eq(ccNumber), anyDouble(), anyLong());
+	}
+
+	@Test
+	void ExistingGuestCreditCardRefusedThenCancels()
+	{
+		//Arrange ---
+		//Check if guest really does exist
+		assertNotNull(hotel.findGuestByPhoneNumber(existingPhone));
+
+		//Act ---
+		//Check the state as we go, because why not?
+		bookingCTL.phoneNumberEntered(existingPhone);
+		assertEquals(BookingCTL.State.ROOM, bookingCTL.getState());
+		bookingCTL.roomTypeAndOccupantsEntered(rtSingle, 1);
+		assertEquals(BookingCTL.State.TIMES, bookingCTL.getState());
+		bookingCTL.bookingTimesEntered(arrival, stayLength);
+		assertEquals(BookingCTL.State.CREDIT, bookingCTL.getState());
+		bookingCTL.creditDetailsEntered(ccType, 6, ccCcv);
+		//We want to STAY in credit, because the credit card was invalid
+		assertEquals(BookingCTL.State.CREDIT, bookingCTL.getState());
+		bookingCTL.cancel();
+
+		//Assert ---
+		assertEquals(BookingCTL.State.CANCELLED, bookingCTL.getState());
+		verify(bookingUI).displayMessage("Credit Card could not be authorized");
+		verify(bookingUI).displayMessage("Booking cancelled");
+		verify(bookingUI, times(4)).setState(any());
+		verify(hotel).isRegistered(existingPhone);
+		verify(hotel, times(2)).findGuestByPhoneNumber(existingPhone);
+		verify(bookingUI).displayGuestDetails(existingName, existingAddress, existingPhone);
 	}
 
 }
