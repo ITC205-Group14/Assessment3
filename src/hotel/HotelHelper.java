@@ -34,7 +34,7 @@ public class HotelHelper {
 
 		Guest guest = new Guest("Fred", "Nurke", 2);
 		CreditCard card = new CreditCard(CreditCardType.VISA, 2, 2);
-		hotel.registerGuest("Fed", "Nurke", 2);
+		hotel.registerGuest("Fred", "Nurke", 2);
 
 		Room room = hotel.findAvailableRoom(RoomType.TWIN_SHARE, date, 1);
 		long confNo = hotel.book(room, guest, date, 1, 2, card);
