@@ -6,6 +6,7 @@ import java.util.Date;
 
 import hotel.credit.CreditAuthorizer;
 import hotel.credit.CreditCard;
+import hotel.credit.CreditCardHelper;
 import hotel.credit.CreditCardType;
 import hotel.entities.Guest;
 import hotel.entities.Hotel;
@@ -18,25 +19,30 @@ public class BookingCTL {
 
 	public static enum State {PHONE, ROOM, REGISTER, TIMES, CREDIT, APPROVED, CANCELLED, COMPLETED}
 
-	private BookingUI bookingUI;
-	private Hotel hotel;
+	BookingUI bookingUI;
+	Hotel hotel;
 
-	private Guest guest;
-	private Room room;
-	private double cost;
+	Guest guest;
+	Room room;
+	double cost;
 
-	private State state;
-	private int phoneNumber;
-	private RoomType selectedRoomType;
-	private int occupantNumber;
-	private Date arrivalDate;
-	private int stayLength;
+	State state;
+	int phoneNumber;
+	RoomType selectedRoomType;
+	int occupantNumber;
+	Date arrivalDate;
+	int stayLength;
+
+	CreditCardHelper creditCardHelper;
+	CreditAuthorizer creditAuthorizer;
 
 
 	public BookingCTL(Hotel hotel) {
 		this.bookingUI = new BookingUI(this);
 		this.hotel = hotel;
 		state = State.PHONE;
+		creditCardHelper = new CreditCardHelper();
+		creditAuthorizer = CreditAuthorizer.getInstance();
 	}
 
 
@@ -125,6 +131,9 @@ public class BookingCTL {
 					format.format(departureDate));
 
 			bookingUI.displayMessage(notAvailableStr);
+
+			bookingUI.setState(BookingUI.State.ROOM);
+			state = State.ROOM;
 		}
 		else {
 			cost = selectedRoomType.calculateCost(arrivalDate, stayLength);
@@ -137,12 +146,12 @@ public class BookingCTL {
 
 
 	public void creditDetailsEntered(CreditCardType type, int number, int ccv) {
-		if (state != State.CREDIT) {
+		if (getState() != State.CREDIT) {
 			String mesg = String.format("BookingCTL: creditDetailsEntered : bad state : %s", state);
 			throw new RuntimeException(mesg);
 		}
-		CreditCard creditCard = new CreditCard(type, number, ccv);
-		boolean approved = CreditAuthorizer.getInstance().authorize(creditCard, cost);
+		CreditCard creditCard = creditCardHelper.loadCreditCard(type, number, ccv);
+		boolean approved = creditAuthorizer.authorize(creditCard, cost);
 		if(approved) {
 			long confirmationNumber = hotel.book(room, guest, arrivalDate, stayLength, occupantNumber, creditCard);
 			String roomDescription = room.getDescription();
@@ -155,14 +164,6 @@ public class BookingCTL {
 		} else {
 			bookingUI.displayMessage("Credit Card could not be authorized");
 		}
-	}
-
-	public boolean isCompleted(){
-		return state == State.COMPLETED;
-	}
-
-	public void setState(State state){
-		this.state = state;
 	}
 
 	public void cancel() {
@@ -178,6 +179,9 @@ public class BookingCTL {
 		bookingUI.displayMessage("Booking completed");
 	}
 
+	public State getState() {
+		return state;
+	}
 
 
 }

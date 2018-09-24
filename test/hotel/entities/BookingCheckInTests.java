@@ -1,8 +1,10 @@
-package hotel.entities.booking;
+package hotel.entities;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.Date;
 
@@ -12,17 +14,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import hotel.credit.CreditCard;
-import hotel.entities.Booking;
 import hotel.entities.Booking.State;
-import hotel.entities.Guest;
-import hotel.entities.Hotel;
-import hotel.entities.Room;
-import hotel.entities.RoomType;
 
 @ExtendWith(MockitoExtension.class)
 class BookingCheckInTests
@@ -36,7 +33,7 @@ class BookingCheckInTests
 	Date arrivalDate = new Date();
 	int stayLength = 1;
 	int numberOfOccupants = 1;
-	@InjectMocks Booking booking = new Booking(guest, room, arrivalDate, stayLength, numberOfOccupants, creditCard);
+	@Spy @InjectMocks Booking booking = new Booking(guest, room, arrivalDate, stayLength, numberOfOccupants, creditCard);
 
 	@BeforeEach
 	void init()
@@ -48,14 +45,15 @@ class BookingCheckInTests
 	void bookingCheckinWithValidState()
 	{
 		//Arrange
-		booking.setState(State.PENDING);
+		when(booking.getState()).thenReturn(State.PENDING);
 		assertTrue(booking.isPending());
 
 		//Act
 		booking.checkIn();
 
 		//Assert
-		Mockito.verify(room).checkin();
+		verify(room).checkin();
+		when(booking.getState()).thenCallRealMethod();
 		assertTrue(booking.isCheckedIn());
 	}
 
@@ -63,7 +61,7 @@ class BookingCheckInTests
 	void bookingCheckinWithInvalidState()
 	{
 		//Arrange
-		booking.setState(State.CHECKED_IN);
+		when(booking.getState()).thenReturn(State.CHECKED_IN);
 		assertFalse(booking.isPending());
 
 		//Act
