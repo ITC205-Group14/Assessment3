@@ -22,9 +22,7 @@ public class Booking {
 	CreditCard creditCard;
 
 	private List<ServiceCharge> charges;
-
 	private State state;
-
 
 
 	public Booking(Guest guest, Room room,
@@ -133,7 +131,7 @@ public class Booking {
 
 
 	public void checkIn() {
-		if (state != State.PENDING) {
+		if (getState() != State.PENDING) {
 			String mesg = String.format("Booking: checkIn : bad state : %s", state);
 			throw new RuntimeException(mesg);
 		}
@@ -152,7 +150,7 @@ public class Booking {
 
 
 	public void checkOut() {
-		if (state != State.CHECKED_IN) {
+		if (getState() != State.CHECKED_IN) {
 			String mesg = String.format("Booking: checkIn : bad state : %s", state);
 			throw new RuntimeException(mesg);
 		}
@@ -163,8 +161,8 @@ public class Booking {
 		state = State.CHECKED_OUT;
 	}
 
-	public void setState(State state) {
-		this.state = state;
+	public State getState() {
+		return state;
 	}
 
 }
