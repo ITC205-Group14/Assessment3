@@ -111,17 +111,17 @@ public class Booking {
 
 
 	public boolean isPending() {
-		return state == State.PENDING;
+		return getState() == State.PENDING;
 	}
 
 
 	public boolean isCheckedIn() {
-		return state == State.CHECKED_IN;
+		return getState() == State.CHECKED_IN;
 	}
 
 
 	public boolean isCheckedOut() {
-		return state == State.CHECKED_OUT;
+		return getState() == State.CHECKED_OUT;
 	}
 
 
