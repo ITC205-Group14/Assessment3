@@ -8,13 +8,11 @@ import static org.mockito.Mockito.when;
 
 import java.util.Date;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -36,12 +34,6 @@ class BookingCheckInTests
 	int numberOfOccupants = 1;
 
 	@Spy @InjectMocks Booking booking = new Booking(guest, room, arrivalDate, stayLength, numberOfOccupants, creditCard);
-
-	@BeforeEach
-	void init()
-	{
-		MockitoAnnotations.initMocks(this);
-	}
 
 	@Test
 	void bookingCheckinWithValidState()
