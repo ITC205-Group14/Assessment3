@@ -3,27 +3,18 @@ package hotel.entities;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import hotel.entities.Booking;
-import hotel.entities.Hotel;
-import hotel.entities.ServiceType;
-
+@ExtendWith(MockitoExtension.class)
 class HotelAddServiceChargeTests
 {
 	Hotel hotel = new Hotel();
 
 	@Mock Booking booking;
-
-	@BeforeEach
-	void init()
-	{
-		MockitoAnnotations.initMocks(this);
-	}
 
 	@Test
 	void hotelAddServiceChargeInvalidRoomId()
