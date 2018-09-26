@@ -102,6 +102,7 @@ public class Hotel {
 
 		room.book(guest, arrivalDate, stayLength, occupantNumber, creditCard);
 		Booking booking = new Booking(guest, room, arrivalDate, stayLength, occupantNumber, creditCard);
+		booking.generateBookingConfirmationNumber();
 		bookingsByConfirmationNumber.put(confirmationNumber, booking);
 		return confirmationNumber;
 	}

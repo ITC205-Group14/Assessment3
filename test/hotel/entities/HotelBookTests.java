@@ -21,10 +21,7 @@ class HotelBookTests
 {
 	Hotel hotel = new Hotel();
 
-	int roomId = 123;
-	RoomType roomType = RoomType.SINGLE;
-	Room room = new Room(roomId, roomType);
-
+	@Mock Room room;
 	@Mock Guest guest;
 	@Mock CreditCard creditCard;
 
@@ -39,7 +36,7 @@ class HotelBookTests
 		Date arrivalDate = new GregorianCalendar(2018, 0, 1).getTime();
 		int stayLength = 3;
 		int occupantNumber = 1;
-		long expected = 102018123;
+		long expected = 1020180;
 		assertEquals(hotel.bookingsByConfirmationNumber.size(), 0);
 
 		//Act
@@ -57,7 +54,7 @@ class HotelBookTests
 		Date arrivalDate = new GregorianCalendar(500000000, 0, 1).getTime();
 		int stayLength = 3;
 		int occupantNumber = 1;
-		long expected = 10500000000123L;
+		long expected = 105000000000L;
 		assertEquals(hotel.bookingsByConfirmationNumber.size(), 0);
 
 		//Act
@@ -98,7 +95,7 @@ class HotelBookTests
 		Date arrivalDate = new GregorianCalendar(2018, 0, 1).getTime();
 		int stayLength = 3;
 		int occupantNumber = 1;
-		long expected = 102018123;
+		long expected = 1020180;
 		assertEquals(hotel.bookingsByConfirmationNumber.size(), 0);
 
 		//Act
@@ -117,7 +114,7 @@ class HotelBookTests
 		Date arrivalDate = new GregorianCalendar(2018, 0, 1).getTime();
 		int stayLength = 3;
 		int occupantNumber = 1;
-		long expected = 102018123;
+		long expected = 1020180;
 		assertEquals(hotel.bookingsByConfirmationNumber.size(), 0);
 
 		//Act
@@ -136,7 +133,7 @@ class HotelBookTests
 		Date arrivalDate = new GregorianCalendar(2018, 0, 1).getTime();
 		int stayLength = 3;
 		int occupantNumber = -1;
-		long expected = 102018123;
+		long expected = 1020180;
 		assertEquals(hotel.bookingsByConfirmationNumber.size(), 0);
 
 		//Act
@@ -155,7 +152,7 @@ class HotelBookTests
 		Date arrivalDate = new GregorianCalendar(2018, 0, 1).getTime();
 		int stayLength = 3;
 		int occupantNumber = Integer.MAX_VALUE;
-		long expected = 102018123;
+		long expected = 1020180;
 		assertEquals(hotel.bookingsByConfirmationNumber.size(), 0);
 
 		//Act
@@ -174,7 +171,7 @@ class HotelBookTests
 		Date arrivalDate = new GregorianCalendar(2018, 0, 1).getTime();
 		int stayLength = 3;
 		int occupantNumber = Integer.MIN_VALUE;
-		long expected = 102018123;
+		long expected = 1020180;
 		assertEquals(hotel.bookingsByConfirmationNumber.size(), 0);
 
 		//Act
@@ -192,7 +189,7 @@ class HotelBookTests
 		//Arrange
 		Date arrivalDate = new GregorianCalendar(2018, 0, 1).getTime();
 		int occupantNumber = 1;
-		long expected = 102018123;
+		long expected = 1020180;
 		assertEquals(hotel.bookingsByConfirmationNumber.size(), 0);
 
 		//Act
@@ -210,7 +207,7 @@ class HotelBookTests
 		//Arrange
 		Date arrivalDate = new GregorianCalendar(2018, 0, 1).getTime();
 		int occupantNumber = 1;
-		long expected = 102018123;
+		long expected = 1020180;
 		assertEquals(hotel.bookingsByConfirmationNumber.size(), 0);
 
 		//Act

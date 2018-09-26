@@ -3,7 +3,6 @@ package hotel.entities;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Date;
@@ -20,13 +19,12 @@ import hotel.credit.CreditCard;
 import hotel.entities.Booking.State;
 
 @ExtendWith(MockitoExtension.class)
-class BookingCheckInTests
+class BookingIntegrationTests
 {
 	@Mock Hotel hotel;
 
-
 	@Mock Guest guest;
-	@Mock Room room;
+	Room room = new Room(0, RoomType.DOUBLE);
 	@Mock CreditCard creditCard;
 
 	Date arrivalDate = new Date();
@@ -36,7 +34,7 @@ class BookingCheckInTests
 	@Spy @InjectMocks Booking booking = new Booking(guest, room, arrivalDate, stayLength, numberOfOccupants, creditCard);
 
 	@Test
-	void bookingCheckinWithValidState()
+	void bookingCheckinWithValidStateRealRoom()
 	{
 		//Arrange
 		when(booking.getState()).thenReturn(State.PENDING);
@@ -46,13 +44,13 @@ class BookingCheckInTests
 		booking.checkIn();
 
 		//Assert
-		verify(room).checkin();
 		when(booking.getState()).thenCallRealMethod();
 		assertTrue(booking.isCheckedIn());
+		assertTrue(room.isOccupied());
 	}
 
 	@Test
-	void bookingCheckinWithInvalidState()
+	void bookingCheckinWithInvalidStateRealRoom()
 	{
 		//Arrange
 		when(booking.getState()).thenReturn(State.CHECKED_IN);
@@ -60,6 +58,38 @@ class BookingCheckInTests
 
 		//Act
 		Executable e = () -> booking.checkIn();
+
+		//Assert
+		assertThrows(RuntimeException.class, e);
+	}
+
+	@Test
+	void bookingCheckOutWithValidStateRealRoom()
+	{
+		//Arrange
+		when(booking.getState()).thenReturn(State.CHECKED_IN);
+		room.checkin();
+		assertTrue(room.isOccupied());
+		assertTrue(booking.isCheckedIn());
+
+		//Act
+		booking.checkOut();
+
+		//Assert
+		when(booking.getState()).thenCallRealMethod();
+		assertTrue(booking.isCheckedOut());
+		assertTrue(room.isReady());
+	}
+
+	@Test
+	void bookingCheckOutWithInvalidStateRealRoom()
+	{
+		//Arrange
+		when(booking.getState()).thenReturn(State.PENDING);
+		assertFalse(booking.isCheckedIn());
+
+		//Act
+		Executable e = () -> booking.checkOut();
 
 		//Assert
 		assertThrows(RuntimeException.class, e);
