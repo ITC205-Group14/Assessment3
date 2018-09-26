@@ -68,6 +68,8 @@ class BookingIntegrationTests
 	{
 		//Arrange
 		when(booking.getState()).thenReturn(State.CHECKED_IN);
+		room.checkin();
+		assertTrue(room.isOccupied());
 		assertTrue(booking.isCheckedIn());
 
 		//Act
