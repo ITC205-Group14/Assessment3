@@ -28,11 +28,13 @@ class BookingCheckInTests
 
 
 	@Mock Guest guest;
-	@Mock Room room = new Room(0, RoomType.DOUBLE);
+	@Mock Room room;
 	@Mock CreditCard creditCard;
+
 	Date arrivalDate = new Date();
 	int stayLength = 1;
 	int numberOfOccupants = 1;
+
 	@Spy @InjectMocks Booking booking = new Booking(guest, room, arrivalDate, stayLength, numberOfOccupants, creditCard);
 
 	@BeforeEach
