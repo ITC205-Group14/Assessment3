@@ -11,27 +11,23 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import hotel.credit.CreditCard;
-import hotel.entities.Booking;
-import hotel.entities.Guest;
-import hotel.entities.Hotel;
-import hotel.entities.Room;
-import hotel.entities.RoomType;
-import hotel.entities.ServiceType;
 
 @ExtendWith(MockitoExtension.class)
 class BookingAddServiceChargeTests
 {
 	@Mock Hotel hotel;
 
-
 	@Mock Guest guest;
 	@Mock CreditCard creditCard;
-	Room room = new Room(0, RoomType.DOUBLE);
+	@Mock Room room;
+
 	Date arrivalDate = new Date();
 	int stayLength = 1;
 	int numberOfOccupants = 1;
+
 	@InjectMocks Booking booking = new Booking(guest, room, arrivalDate, stayLength, numberOfOccupants, creditCard);
 
+	//Unit tests
 	@Test
 	void bookingAddServiceChargeValidCharges()
 	{
@@ -85,5 +81,4 @@ class BookingAddServiceChargeTests
 		//Assert
 		assertEquals(1, booking.getCharges().size());
 	}
-
 }
