@@ -35,12 +35,16 @@ public class Booking {
 		this.bookedArrival = arrivalDate;
 		this.stayLength = stayLength;
 		this.numberOfOccupants = numberOfOccupants;
-		this.confirmationNumber = generateConfirmationNumber(room.getId(), arrivalDate);
 		this.creditCard = creditCard;
 		this.charges = new ArrayList<>();
 		this.state = State.PENDING;
 	}
 
+	//Adding indirection for testing
+	public void generateBookingConfirmationNumber()
+	{
+		this.confirmationNumber = generateConfirmationNumber(room.getId(), this.bookedArrival);
+	}
 
 	private long generateConfirmationNumber(int roomId, Date arrivalDate) {
 		Calendar calendar = Calendar.getInstance();
